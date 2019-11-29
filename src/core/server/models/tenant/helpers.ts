@@ -1,11 +1,12 @@
+import { FluentBundle } from "@fluent/bundle/compat";
 import crypto from "crypto";
-import { FluentBundle } from "fluent/compat";
+
+import { translate } from "coral-server/services/i18n";
 
 import {
   GQLReactionConfiguration,
   GQLStaffConfiguration,
 } from "coral-server/graph/tenant/schema/__generated__/types";
-import { translate } from "coral-server/services/i18n";
 
 import { SSOKey } from "../settings";
 
