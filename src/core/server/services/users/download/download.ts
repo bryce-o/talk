@@ -5,9 +5,11 @@ import { Response } from "express";
 import { kebabCase } from "lodash";
 import { Db } from "mongodb";
 
-import { getLatestRevision } from "coral-server/models/comment";
-import { Comment } from "coral-server/models/comment";
-import { retrieveManyStories } from "coral-server/models/story";
+import { Comment, getLatestRevision } from "coral-server/models/comment";
+import {
+  getURLWithCommentID,
+  retrieveManyStories,
+} from "coral-server/models/story";
 import { Tenant } from "coral-server/models/tenant";
 import { User } from "coral-server/models/user";
 
@@ -101,15 +103,10 @@ export async function sendUserDownload(
 
       const revision = getLatestRevision(comment);
 
-      const commentID = comment.id;
       const createdAt = formatter.format(new Date(comment.createdAt));
-      const storyURL = story.url;
-      const urlBuilder = new URL(storyURL);
-      urlBuilder.searchParams.set("commentID", commentID);
-      const commentURL = urlBuilder.href;
-      const body = revision.body;
+      const commentURL = getURLWithCommentID(story.url, comment.id);
 
-      csv.write([commentID, createdAt, storyURL, commentURL, body]);
+      csv.write([comment.id, createdAt, story.url, commentURL, revision.body]);
     }
 
     commentBatch = [];
